@@ -13,7 +13,11 @@ import (
 )
 
 type Configuration struct {
-	Mode string `json:"mode" env:"REMEMBRANCE_MODE" cmd:"mode"`
+	Mode              string `json:"mode" env:"REMEMBRANCE_MODE" cmd:"mode"`
+	KeysDirectory     string `json:"keysDirectory" env:"REMEMBRANCE_KEYS_DIRECTORY" cmd:"keysDirectory"`
+	RunDirectory      string `json:"runDirectory" env:"REMEMBRANCE_RUN_DIRECTORY" cmd:"runDirectory"`
+	NodeIdUuidVersion int    `json:"nodeIdUuidVersion" env:"REMEMBRANCE_NODE_ID_UUID_VERSION" cmd:"nodeIdUuidVersion"`
+	NodeIdUuidString  string `json:"nodeIdUuidString" env:"REMEMBRANCE_NODE_ID_UUID_STRING" cmd:"nodeIdUuidString"`
 }
 
 const defaultConfigurationFilePath = "./config.json"
@@ -43,6 +47,8 @@ func GetConfiguration(forceReload bool, configurationFilePath string) (Configura
 			currentConfiguration = &temp
 			loaded = true
 		}
+	} else {
+		defer guard.RUnlock()
 	}
 
 	return *currentConfiguration, nil
@@ -149,7 +155,10 @@ func applyCommandLineValue(field *reflect.StructField, value *reflect.Value) err
 }
 
 func applyDefaultValues(configuration *Configuration) {
-	configuration.Mode = "default"
+	configuration.Mode = ""
+	configuration.KeysDirectory = ""
+	configuration.RunDirectory = "./run"
+	configuration.NodeIdUuidVersion = 4
 }
 
 func loadConfiguration(configuration *Configuration, configurationFilePath string) error {

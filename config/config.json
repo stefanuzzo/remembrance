@@ -1,3 +1,5 @@
 {
-    "mode": "standalone"
+    "mode": "standalone",
+    "nodeIdUuidVersion": 3,
+    "nodeIdUuidString": "stefanuzzo"
 }
